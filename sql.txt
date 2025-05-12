@@ -1,0 +1,41 @@
+CREATE TABLE IF NOT EXISTS "Setor" (
+	"setor_ID" INTEGER NOT NULL,
+	"nome_setor" VARCHAR(50) NOT NULL UNIQUE,
+	"desc_setor" VARCHAR(255),
+	PRIMARY KEY("setor_ID" AUTOINCREMENT)
+);
+
+CREATE TABLE IF NOT EXISTS "Funcionario" (
+	"funcionario_ID" INTEGER NOT NULL,
+	"nome"	VARCHAR(50) NOT NULL,
+	"email"	VARCHAR(100),
+	"setor_ID" INTEGER NOT NULL,
+	PRIMARY KEY("funcionario_ID" AUTOINCREMENT),
+	FOREIGN KEY("setor_ID") REFERENCES "Setor"("setor_ID")
+);
+
+CREATE TABLE IF NOT EXISTS "Usuario" (
+	"usuario_ID" INTEGER NOT NULL,
+	"nome_usuario" VARCHAR(50) NOT NULL UNIQUE,
+	"senha" TEXT NOT NULL,
+	"funcionario_ID" INTEGER NOT NULL,
+	"admin"	TEXT NOT NULL,
+	PRIMARY KEY("usuario_ID" AUTOINCREMENT)
+	FOREIGN KEY("funcionario_ID") REFERENCES "Funcionario"("funcionario_ID") ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "Local" (
+	"local_ID" INTEGER NOT NULL,
+	"nome_local" VARCHAR(50) NOT NULL UNIQUE,
+	PRIMARY KEY("local_ID" AUTOINCREMENT)
+);
+
+CREATE TABLE IF NOT EXISTS "Acesso" (
+	"data_hora" DATETIME DEFAULT (datetime('now', 'localtime')),
+	"tipo"	VARCHAR(7) NOT NULL,
+	"funcionario_ID" INTEGER NOT NULL,
+	"local_ID" INTEGER NOT NULL,
+	FOREIGN KEY("local_ID") REFERENCES "Local"("local_ID"),
+	FOREIGN KEY("funcionario_ID") REFERENCES "Funcionario"("funcionario_ID"),
+	PRIMARY KEY("data_hora","funcionario_ID","local_ID")
+);
